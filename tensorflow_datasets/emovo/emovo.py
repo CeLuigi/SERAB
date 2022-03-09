@@ -155,7 +155,7 @@ class Emovo(tfds.core.GeneratorBasedBuilder):
 
         items_and_groups = []
         for fname in tf.io.gfile.glob('{}/*/*/*.wav'.format(extract_path)):
-            if os.path.basename(fn).split("-")[0] in ['rab': 'anger', 'pau', 'gio', 'tri', 'neu']:
+            if os.path.basename(fname).split("-")[0] in ['rab', 'anger', 'pau', 'gio', 'tri', 'neu']:
                 speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
                 items_and_groups.append((fname, speaker_id))
 
