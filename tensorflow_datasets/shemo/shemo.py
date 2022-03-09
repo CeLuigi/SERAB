@@ -42,7 +42,6 @@ LABEL_MAP = {
     'F': 'fear',
     'H': 'happiness',
     'S': 'sadness',
-    'W': 'surprise',
     'N': 'neutral',
 }
 
@@ -151,7 +150,8 @@ class Shemo(tfds.core.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager: tfds.download.DownloadManager):
         """Returns SplitGenerators."""
         # Downloads the data and defines the splits
-        zip_path = os.path.join(dl_manager.manual_dir, 'shemo.zip')
+        zip_path = os.path.join(dl_manager.manual_dir, 'male.zip')
+        zip_path2 = os.path.join(dl_manager.manual_dir, 'female.zip')
 
         print(zip_path)
 
@@ -161,18 +161,35 @@ class Shemo(tfds.core.GeneratorBasedBuilder):
                 f'female.zip and male.zip at {_HOMEPAGE} and place it into: {zip_path}')
 
         extract_path = dl_manager.extract(zip_path)
+        extract_path2 = dl_manager.extract(zip_path2)
 
         print(extract_path)
 
+        audio_paths = tf.io.gfile.glob('{}/*/*.wav'.format(extract_path))
+        audio_paths += tf.io.gfile.glob('{}/*/*.wav'.format(extract_path2))
+
         items_and_groups = []
-        for fname in tf.io.gfile.glob('{}/*/*.wav'.format(extract_path)):
-            speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
-            gender_id = parse_name(os.path.basename(fname), from_i=0, to_i=1)
-            items_and_groups.append((fname, speaker_id, gender_id))
+        for fname in audio_paths:
+            if parse_name(wavname, from_i=3, to_i=4) in ['A', 'F', 'H', 'S', 'N']:
+                speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
+                gender_id = parse_name(os.path.basename(fname), from_i=0, to_i=1)
+                items_and_groups.append((fname, speaker_id, gender_id))
 
         split_probs = [('train', 0.6), ('validation', 0.2), ('test', 0.2)]  # Like SAVEE (https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/audio/savee.py)
 
         splits = _get_inter_splits_by_group(items_and_groups, split_probs, 0)
+
+        with open("train.lst", 'w') as f:
+            for l in splits['train']:
+                f.write(l)
+
+        with open("val.lst", 'w') as f:
+            for l in splits['validation']:
+                f.write(l)
+
+        with open("test.lst", 'w') as f:
+            for l in splits['test']:
+                f.write(l)
 
         # Returns the Dict[split names, Iterator[Key, Example]]
         return [
