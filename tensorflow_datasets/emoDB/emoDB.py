@@ -161,7 +161,7 @@ class Emodb(tfds.core.GeneratorBasedBuilder):
         extract_path = dl_manager.extract(zip_path)
 
         items_and_groups = []
-        for fname in tf.io.gfile.glob('{}/wav/*.wav'.format(extract_path)):
+        for fname in tf.io.gfile.glob('{}/*/wav/*.wav'.format(extract_path)):
             if parse_name(wavname, from_i=5, to_i=6) in ['W', 'A', 'F', 'T', 'N']:
             speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=2)
             items_and_groups.append((fname, speaker_id))
