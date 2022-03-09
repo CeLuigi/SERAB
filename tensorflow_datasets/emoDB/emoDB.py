@@ -162,9 +162,9 @@ class Emodb(tfds.core.GeneratorBasedBuilder):
 
         items_and_groups = []
         for fname in tf.io.gfile.glob('{}/*/wav/*.wav'.format(extract_path)):
-            if parse_name(wavname, from_i=5, to_i=6) in ['W', 'A', 'F', 'T', 'N']:
-            speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=2)
-            items_and_groups.append((fname, speaker_id))
+            if os.path.basename(fname)[-6] in ['W', 'A', 'F', 'T', 'N']:
+                speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=2)
+                items_and_groups.append((fname, speaker_id))
 
         split_probs = [('train', 0.6), ('validation', 0.2), ('test', 0.2)]  # Like SAVEE (https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/audio/savee.py)
 
