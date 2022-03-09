@@ -30,11 +30,9 @@ _HOMEPAGE = 'https://zenodo.org/record/1478765#.YMsDVWgzaUk'
 
 _LABEL_MAP = {
     'C': 'anger',
-    'D': 'disgust',
     'P': 'fear',
     'J': 'happiness',
     'T': 'sadness',
-    'S': 'surprise',
     'N': 'neutral',
 }
 
@@ -157,12 +155,25 @@ class Cafe(tfds.core.GeneratorBasedBuilder):
 
         items_and_groups = []
         for fname in audio_paths:
-            speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=2)
-            items_and_groups.append((fname, speaker_id))
+            if os.path.basename(fname).split("-")[1] in ['C', 'P', 'J', 'T', 'N']:
+                speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=2)
+                items_and_groups.append((fname, speaker_id))
 
         split_probs = [('train', 0.6), ('validation', 0.2), ('test', 0.2)]  # Like SAVEE (https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/audio/savee.py)
 
         splits = _get_inter_splits_by_group(items_and_groups, split_probs, 0)
+
+        with open("train.lst", 'w') as f:
+            for l in splits['train']:
+                f.write(l)
+
+        with open("val.lst", 'w') as f:
+            for l in splits['validation']:
+                f.write(l)
+
+        with open("test.lst", 'w') as f:
+            for l in splits['test']:
+                f.write(l)
 
         # Returns the Dict[split names, Iterator[Key, Example]]
         return [

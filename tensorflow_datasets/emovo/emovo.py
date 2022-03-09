@@ -32,11 +32,9 @@ _HOMEPAGE = 'http://voice.fub.it/activities/corpora/emovo/index.html'
 
 LABEL_MAP = {
     'rab': 'anger',
-    'dis': 'disgust',
     'pau': 'fear',
     'gio': 'happiness',
     'tri': 'sadness',
-    'sor': 'surprise',
     'neu': 'neutral',
 }
 
@@ -157,13 +155,27 @@ class Emovo(tfds.core.GeneratorBasedBuilder):
 
         items_and_groups = []
         for fname in tf.io.gfile.glob('{}/*/*/*.wav'.format(extract_path)):
-            speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
-            items_and_groups.append((fname, speaker_id))
+            if os.path.basename(fn).split("-")[0] in ['rab': 'anger', 'pau', 'gio', 'tri', 'neu']:
+                speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
+                items_and_groups.append((fname, speaker_id))
 
         # Like SAVEE (https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/audio/savee.py)
         split_probs = [('train', 0.6), ('validation', 0.2), ('test', 0.2)]
 
         splits = _get_inter_splits_by_group(items_and_groups, split_probs, 0)
+
+        with open("train.lst", 'w') as f:
+            for l in splits['train']:
+                f.write(l)
+
+        with open("val.lst", 'w') as f:
+            for l in splits['validation']:
+                f.write(l)
+
+        with open("test.lst", 'w') as f:
+            for l in splits['test']:
+                f.write(l)
+
 
         # Returns the Dict[split names, Iterator[Key, Example]]
         return [
