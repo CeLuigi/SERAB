@@ -7,6 +7,9 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_datasets.public_api as tfds
 
+from audio_features import Audio
+
+
 # Markdown description    that will appear on the catalog page.
 _DESCRIPTION = """
 An emotional corpus applicable to Italian language.
@@ -129,7 +132,7 @@ class Emovo(tfds.core.GeneratorBasedBuilder):
             description=_DESCRIPTION,
             features=tfds.features.FeaturesDict({
                 # These are the features of your dataset like images, labels ...
-                'audio': tfds.features.Audio(file_format='wav', sample_rate=_SAMPLE_RATE),
+                'audio': Audio(file_format='wav', sample_rate=_SAMPLE_RATE),
                 'label': tfds.features.ClassLabel(names=LABEL_MAP.values()),
                 'speaker_id': tf.string
             }),

@@ -117,7 +117,7 @@ class Ravdess(tfds.core.GeneratorBasedBuilder):
     }
 
     MANUAL_DOWNLOAD_INSTRUCTIONS = """\
-    manual_dir should contain the file RAVDESS_Audio_Speech.zip.
+    manual_dir should contain the file Audio_Speech_Actors_01-24.zip.
     """
 
     def _info(self) -> tfds.core.DatasetInfo:
@@ -142,7 +142,7 @@ class Ravdess(tfds.core.GeneratorBasedBuilder):
     def _split_generators(self, dl_manager: tfds.download.DownloadManager):
         """Returns SplitGenerators."""
         # Downloads the data and defines the splits
-        zip_path = os.path.join(dl_manager.manual_dir, 'RAVDESS_Audio_Speech.zip')
+        zip_path = os.path.join(dl_manager.manual_dir, 'Audio_Speech_Actors_01-24.zip')
 
         if not tf.io.gfile.exists(zip_path):
             raise AssertionError(
