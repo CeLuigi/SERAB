@@ -5,7 +5,6 @@ import os
 
 import numpy as np
 import tensorflow as tf
-from audio_features import Audio
 import tensorflow_datasets.public_api as tfds
 
 # Markdown description    that will appear on the catalog page.
@@ -127,7 +126,7 @@ class Ravdess(tfds.core.GeneratorBasedBuilder):
             builder=self,
             description=_DESCRIPTION,
             features=tfds.features.FeaturesDict({
-                'audio': Audio(file_format='wav', sample_rate=48000),
+                'audio': tfds.features.Audio(file_format='wav', sample_rate=48000),
                 'label': tfds.features.ClassLabel(names=LABEL_MAP.values()),
                 'speaker_id': tf.string
             }),
