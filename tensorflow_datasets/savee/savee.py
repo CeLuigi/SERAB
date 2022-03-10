@@ -122,7 +122,7 @@ def _get_inter_splits_by_group(items_and_groups, split_probs, split_number):
   return split_to_ids
 
 
-class Savee(tfds.core.GeneratorBasedBuilder):
+class MySavee(tfds.core.GeneratorBasedBuilder):
   """The audio part of SAVEE dataset for emotion recognition."""
 
   VERSION = tfds.core.Version('1.0.0')
@@ -172,15 +172,15 @@ class Savee(tfds.core.GeneratorBasedBuilder):
 
     with open("train.lst", 'w') as f:
         for l in splits['train']:
-            f.write(l)
+            f.write(l+"\n")
 
     with open("val.lst", 'w') as f:
         for l in splits['validation']:
-            f.write(l)
+            f.write(l+"\n")
 
     with open("test.lst", 'w') as f:
         for l in splits['test']:
-            f.write(l)
+            f.write(l+"\n")
 
     return [
         tfds.core.SplitGenerator(

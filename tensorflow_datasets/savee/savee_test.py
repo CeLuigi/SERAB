@@ -7,7 +7,7 @@ from tensorflow_datasets.savee import savee
 class RavdessTest(tfds.testing.DatasetBuilderTestCase):
   """Tests for ravdess dataset."""
   # TODO(ravdess):
-  DATASET_CLASS = ravdess.Ravdess
+  DATASET_CLASS = savee.Savee
   SPLITS = {
       'train': 3,  # Number of fake train example
       'test': 1,  # Number of fake test example

@@ -23,11 +23,11 @@ import tensorflow as tf
 import tensorflow_datasets.public_api as tfds
 
 LABEL_MAP = {
-    'angry': 0,
-    'sad': 1,
-    'fear': 2,
-    'neutral': 3,
-    'happy': 4
+    'angry': 'anger',
+    'sad': 'sadness',
+    'fear': 'fear',
+    'neutral': 'neutral',
+    'happy': 'happiness'
 }
 
 
@@ -169,8 +169,9 @@ class Tess(tfds.core.GeneratorBasedBuilder):
     extract_path = dl_manager.extract(zip_path)
 
     items_and_groups = []
-    for fname in tf.io.gfile.glob('{}/*/*.wav'.format(extract_path)):
-      if emotion = os.path.basename(fname).split("_")[-1][:-4] in ['angry','fear','happy','neutral', 'sadness']:
+    print('{}/*/*.wav'.format(extract_path))
+    for fname in tf.io.gfile.glob('{}/*.wav'.format(extract_path)):
+      if os.path.basename(fname).split("_")[-1][:-4] in ['angry','fear','happy','neutral', 'sadness']:
         speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=3)
         items_and_groups.append((fname, speaker_id))
 
@@ -179,24 +180,16 @@ class Tess(tfds.core.GeneratorBasedBuilder):
 
     with open("train.lst", 'w') as f:
         for l in splits['train']:
-            f.write(l)
-
-    with open("val.lst", 'w') as f:
-        for l in splits['validation']:
-            f.write(l)
+            f.write(l+"\n")
 
     with open("test.lst", 'w') as f:
         for l in splits['test']:
-            f.write(l)
+            f.write(l+"\n")
 
     return [
         tfds.core.SplitGenerator(
             name=tfds.Split.TRAIN,
             gen_kwargs={'file_names': splits['train']},
-        ),
-        tfds.core.SplitGenerator(
-            name=tfds.Split.VALIDATION,
-            gen_kwargs={'file_names': splits['validation']},
         ),
         tfds.core.SplitGenerator(
             name=tfds.Split.TEST,
@@ -211,4 +204,4 @@ class Tess(tfds.core.GeneratorBasedBuilder):
       speaker_id = parse_name(wavname, from_i=0, to_i=3)
       label = LABEL_MAP[wavname.split("_")[-1][:-4]]
       example = {'audio': fname, 'label': label, 'speaker_id': speaker_id}
-      yield key, example
+      yield fname, example
