@@ -35,13 +35,10 @@ _HOMEPAGE = 'https://smartlaboratory.org/ravdess/'
 
 LABEL_MAP = {
     '05': 'anger',
-    '07': 'disgust',
     '06': 'fear',
     '03': 'happiness',
     '04': 'sadness',
-    '08': 'surprise',
     '01': 'neutral',
-    '02': 'calm'
 }
 
 def parse_name(name, from_i, to_i, mapping=None):
@@ -157,12 +154,25 @@ class Ravdess(tfds.core.GeneratorBasedBuilder):
 
         items_and_groups = []
         for fname in tf.io.gfile.glob('{}/*/*.wav'.format(extract_path)):
-            speaker_id = parse_name(os.path.basename(fname), from_i=-6, to_i=-4)
-            items_and_groups.append((fname, speaker_id))
+            if parse_name(os.path.basename(fname), from_i=6, to_i=8) in ['05', '06', '03', '04', '01']:
+                speaker_id = parse_name(os.path.basename(fname), from_i=-6, to_i=-4)
+                items_and_groups.append((fname, speaker_id))
 
         split_probs = [('train', 0.6), ('validation', 0.2), ('test', 0.2)]  # Like SAVEE (https://github.com/tensorflow/datasets/blob/master/tensorflow_datasets/audio/savee.py)
 
         splits = _get_inter_splits_by_group(items_and_groups, split_probs, 0)
+
+        with open("train.lst", 'w') as f:
+            for l in splits['train']:
+                f.write(l)
+
+        with open("val.lst", 'w') as f:
+            for l in splits['validation']:
+                f.write(l)
+
+        with open("test.lst", 'w') as f:
+            for l in splits['test']:
+                f.write(l)
 
         # Returns the Dict[split names, Iterator[Key, Example]]
         return [

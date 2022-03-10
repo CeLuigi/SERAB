@@ -165,12 +165,12 @@ class Shemo(tfds.core.GeneratorBasedBuilder):
 
         print(extract_path)
 
-        audio_paths = tf.io.gfile.glob('{}/*/*.wav'.format(extract_path))
-        audio_paths += tf.io.gfile.glob('{}/*/*.wav'.format(extract_path2))
+        audio_paths = tf.io.gfile.glob('{}/*.wav'.format(extract_path))
+        audio_paths += tf.io.gfile.glob('{}/*.wav'.format(extract_path2))
 
         items_and_groups = []
         for fname in audio_paths:
-            if parse_name(wavname, from_i=3, to_i=4) in ['A', 'F', 'H', 'S', 'N']:
+            if parse_name(os.path.basename(fname), from_i=3, to_i=4) in ['A', 'F', 'H', 'S', 'N']:
                 speaker_id = parse_name(os.path.basename(fname), from_i=4, to_i=6)
                 gender_id = parse_name(os.path.basename(fname), from_i=0, to_i=1)
                 items_and_groups.append((fname, speaker_id, gender_id))
