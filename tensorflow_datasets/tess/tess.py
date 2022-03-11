@@ -172,7 +172,7 @@ class Tess(tfds.core.GeneratorBasedBuilder):
     for fname in tf.io.gfile.glob('{}/*.wav'.format(extract_path)):
       if os.path.basename(fname) in ["YAF_neat_fear.wav", "YAF_germ_angry.wav"]:
         continue
-      if os.path.basename(fname).split("_")[-1][:-4] in ['angry','fear','happy','neutral', 'sadness']:
+      if os.path.basename(fname).split("_")[-1][:-4] in ['angry','fear','happy','neutral', 'sad']:
         speaker_id = parse_name(os.path.basename(fname), from_i=0, to_i=3)
         items_and_groups.append((fname, speaker_id))
 
