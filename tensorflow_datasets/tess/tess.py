@@ -169,7 +169,7 @@ class Tess(tfds.core.GeneratorBasedBuilder):
     extract_path = dl_manager.extract(zip_path)
 
     items_and_groups = []
-    for fname in tf.io.gfile.glob('{}/*/*.wav'.format(extract_path)):
+    for fname in tf.io.gfile.glob('{}/*.wav'.format(extract_path)):
       if os.path.basename(fname) in ["YAF_neat_fear.wav", "YAF_germ_angry.wav"]:
         continue
       if os.path.basename(fname).split("_")[-1][:-4] in ['angry','fear','happy','neutral', 'sadness']:
